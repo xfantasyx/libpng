@@ -711,7 +711,10 @@ if(PNG_SHARED)
   target_include_directories(png_shared
                              PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
   target_include_directories(png_shared SYSTEM
-                             INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/libpng${PNGLIB_ABI_VERSION}>)
+                             INTERFACE 
+                              $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/libpng${PNGLIB_ABI_VERSION}>
+                              $<INSTALL_INTERFACE:include>
+                              )
   target_link_libraries(png_shared PUBLIC ZLIB::ZLIB ${M_LIBRARY})
 endif()
 
@@ -727,7 +730,9 @@ if(PNG_STATIC)
   target_include_directories(png_static
                              PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
   target_include_directories(png_static SYSTEM
-                             INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/libpng${PNGLIB_ABI_VERSION}>)
+                             INTERFACE 
+                             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/libpng${PNGLIB_ABI_VERSION}>
+                             $<INSTALL_INTERFACE:include>)
   target_link_libraries(png_static PUBLIC ZLIB::ZLIB ${M_LIBRARY})
 endif()
 
@@ -1127,7 +1132,7 @@ endif()
 # Create an export file that CMake users can include() to import our targets.
 if(NOT SKIP_INSTALL_EXPORT AND NOT SKIP_INSTALL_ALL)
   install(EXPORT libpng
-          DESTINATION ${CMAKE_INSTALL_LIBDIR}/libpng
+          DESTINATION cmake
           FILE libpng${PNGLIB_ABI_VERSION}.cmake)
 endif()
 
@@ -1148,11 +1153,11 @@ if(NOT SKIP_INSTALL_CONFIG_FILE AND NOT SKIP_INSTALL_ALL)
   install(EXPORT PNGTargets
           FILE PNGTargets.cmake
           NAMESPACE PNG::
-          DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/PNG)
+          DESTINATION cmake)
 
   install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/scripts/cmake/PNGConfig.cmake
                 ${CMAKE_CURRENT_BINARY_DIR}/PNGConfigVersion.cmake
-          DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/PNG)
+          DESTINATION cmake)
 endif()
 
 # TODO: Create MSVC import lib for MinGW-compiled shared lib.
